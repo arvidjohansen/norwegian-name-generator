@@ -26,15 +26,23 @@ class Person():
     @property
     def username(self, ):
         fname = self.fname.replace(' ','') #remove spaces
-        return (fname + self.sname[0]).lower() #full fname + 1st in lastname
-        #return (fname[:3].replace(' ','') + self.sname[:3]).lower() #3 first in fname + 3 first in sname
+        #return (fname + self.sname[0]).lower() #full fname + 1st in lastname
+        return (fname[:3].replace(' ','') + self.sname[:3]).lower() #3 first in fname + 3 first in sname
     
     @property
     def name(self):
         return f'{self.fname} {self.sname}'
+    
+    @property
+    def password(self, length=7):
+        letters = 'abcdefghijklmnopqrstuvwxyzæøå'
+        numbers = '1234567890'
+        password = ''.join(random.choice(letters) for c in range(length-3))
+        password += ''.join([random.choice(numbers) for c in range(3)])
+        return password
 
     def __repr__(self):
-        return f'({self.gender}): {self.fname} {self.sname} -> {self.username} ({len(self.username)})'
+        return f'({self.gender}): {self.fname} {self.sname} ({self.username}) -> {self.password}'
 
 def rand_person():
     fname = random.choice(fn_all)
@@ -42,7 +50,6 @@ def rand_person():
     if fname in fn_male: gender = 'm'
     elif fname in fn_female: gender = 'f'
     else: gender = '?'
-
     return Person(fname, surname, gender=gender)
 
 def n_rand_people(n=100):
@@ -50,13 +57,12 @@ def n_rand_people(n=100):
 
 def export_csv():
     with open('names.csv','w') as f:
-        f.write(f'gender,username,firstname,surname\n')
+        f.write(f'gender,username,firstname,surname,password\n')
         for p in n_rand_people():
-            f.write(f'{p.gender},{p.username},{p.fname},{p.sname}\n')
+            f.write(f'{p.gender},{p.username},{p.fname},{p.sname},{p.password})\n')
 
 def main():
-    export_csv()
-
+    print(n_rand_people())
 if __name__ == '__main__':
     main()
 
